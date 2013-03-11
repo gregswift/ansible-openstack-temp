@@ -1,0 +1,5 @@
+- name: Create /etc/chef
+  action: file path=/etc/chef owner=root group=root mode=0755 state=directory
+
+- name: Download validation key from self
+  action: get_url url=http://${chef_ip}:4000/validation.pem dest=/etc/chef/validation.pem mode=0440

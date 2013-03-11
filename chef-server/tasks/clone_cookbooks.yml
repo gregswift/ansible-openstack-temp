@@ -1,0 +1,8 @@
+- name: Create directory for cookbooks
+  action: file path=/opt/rpcs/chef-cookbooks owner=root group-root mode=0755 state=directory
+
+- name: Clone main cookbooks
+  action: git repo=git://github.com/rcbops/chef-cookbooks.git dest=/opt/rpcs/chef-cookbooks
+
+- name: Clone gravity-bu cookbooks
+  action: git repo=git://github.com/rsoprivatecloud/gravity-bu.git dest=/opt/rpcs/chef-cookbooks/cookbooks/gravity-bu

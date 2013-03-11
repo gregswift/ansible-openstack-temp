@@ -1,0 +1,11 @@
+- name: Upload cookbook
+  action: command knife cookbook upload -o /opt/rpcs/chef-cookbooks/cookbooks -a
+
+- name: Add roles
+  action: command knife role from file /opt/rpcs/chef-cookbooks/roles/*.rb
+
+- name: Generate knife environment file
+  action: template src=templates/environment.json.j2 dest=/opt/rpcs/${environment}.json owner=root group=root mode=0644
+
+- name: Create knife environment
+  action: command knife environment openstack from file "/opt/rpcs/${environment}.json"

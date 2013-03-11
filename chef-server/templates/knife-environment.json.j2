@@ -1,0 +1,104 @@
+{
+  "name": "{{ environment }}",
+  "description": "",
+  "cookbook_versions": {
+  },
+  "json_class": "Chef::Environment",
+  "chef_type": "environment",
+  "default_attributes": {
+    "horizon": {
+      "theme": "{{ dashboard_theme }}"
+    },
+    "package_component": "{{ openstack_release }}"
+  },
+  "override_attributes": {
+    "custom_template_banner": "{{ custom_banner }}"
+    "hardware" : {
+      "install_oem": false
+    },
+    "monitoring" : {
+      "metric_provider" : "collectd",
+      "procmon_provider" : "monit"
+    },
+    "mysql": {
+      "allow_remote_root": true,
+      "root_network_acl": "%",
+      "tunable": {
+        "log_queries_not_using_index": false
+      }
+    },
+   "keystone": {
+      "tenants": [
+         "admin",
+         "service",
+{% if tenants %}
+{% for tenant in tenants %}
+         "{{ tenant }}",
+{% enfdor %}
+{% else %}
+         "local-tenant",
+{% endif %}
+      ],
+      "users":{
+         "admin": {
+            "password": "{{ openstack_admin_password }}",
+            "roles":{
+               "admin": [
+                  "admin"
+               ]
+            }
+         }
+      },
+      "admin_user": "admin"
+   }, 
+    "osops": {
+      "apply_patches": true
+    },
+    "developer_mode": false,
+    "glance": {
+      "api": {
+{% if default_store %}
+        "default_store": "{{ default_store }}"
+{% end if %}
+      },
+      "images": [
+{% for image in glance_images %}
+         "{{ image }}",
+{% enfdor %}
+      ],
+      "image_upload": false
+    },
+    "nova": {
+      "config": {
+        "ram_allocation_ratio": {{ ram_ratio }},
+        "cpu_allocation_ratio": {{ cpu_ratio }},
+        "start_guests_on_host_boot": {{ autostart }},
+        "resume_guests_state_on_host_boot": {{ resume_state }},
+        "use_single_default_gateway": false
+      },
+      "network": {
+        "fixed_range": "<fixed network>",
+        "public_interface": "<name of bridge where "public" traffic will head out>",
+        "multi_host": true,
+        "dmz_cidr": "10.128.0.0/24 < change if the customer has one listed in build ticket>"
+      },
+      "networks": [
+        {
+          "num_networks": "1",
+          "bridge": "br0",
+          "label": "public",
+          "bridge_dev": "publicbr0",
+          "dns1": "<DC nameserver1>",
+          "dns2": "<DC nameserver2>",
+          "network_size": "256",
+          "ipv4_cidr": "<change to match customers fixed network>"
+        }
+      ]
+    },
+    "osops_networks": {
+      "management": "<host network>",
+      "nova": "<fill in, most likely host network>",
+      "public": "<fill in, most likely host network>"
+    }
+  }
+}

@@ -1,0 +1,41 @@
+- name: Place chef bridge interface configuration
+  action: copy src=files/ifcfg-chefbr0 dest=/etc/sysconfig/network-scripts/ifcfg-chefbr0 owner=root group=root mode=0644
+
+- name: Bring up chef bridge
+  action: command ifup chefbr0
+
+- name: Add prerouting rule to iptables for chef
+  action: command iptables -t nat -A PREROUTING -s ${ansible_eth0.ipv4.address} -p tcp --dport 4000 -j DNAT --to-dest ${chef_ip}
+
+- name: Add postrouting rule to iptables for chef
+  action: command iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+
+- name: Save iptables configuration
+  action: command service iptables save
+
+- name: Create directory to store chef-server image
+  action: file path=/opt/rpcs owner=root group=root mode=0755 state=directory
+
+- name: Download pristine chef-server image
+  action: command curl -O $vm_storage_dir/chefserver.qcow2.pristine http://c390813.r13.cf1.rackcdn.com/chef-server.qcow2
+
+- name: Create runnable copy of chef-server image
+  action: command cp /opt/rpcs/chefserver.qcow2.pristine /opt/rpcs/chefserver.qcow2
+
+- name: Create chef-server xml file
+  action: copy src=files/chef-server.xml dest=/opt/rpcs/chef-server.xml owner=root group=root mode=0644
+
+- name: Define chef-server in virsh
+  action: command virsh define /opt/rpcs/chef-server.xml
+
+- name: Configure chef-server virtual to autostart
+  action: virt guest=chef-server command=autostart
+
+- name: Start chef-server virtual
+  action: virt guest=chef-server state=running
+
+- name: Ensure chef config directory exists for root
+  action: file path=/root/.chef owner=root group=root mode=0755 state=directory
+
+- name: Place knife configuration for root
+  action: copy src=files/knife.rb dest=/root/.chef/knife.rb owner=root group=root mode=0644

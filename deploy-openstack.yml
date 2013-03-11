@@ -1,0 +1,34 @@
+- hosts: nodes
+  vars_files:
+    - vars/global_vars.yml
+
+  tasks:
+    - include: common/tasks/ssh_keys.yml user=root
+    - include: common/tasks/update.yml
+    - include: common/tasks/packages.yml
+    - include: common/tasks/crashdump.yml
+
+- hosts: controller
+  tasks:
+    - include: controller/tasks/packages.yml
+    - include: controller/tasks/local_kvm.yml
+    - include: controller/tasks/chef_server.yml
+
+- hosts: chef-server
+  vars_prompt:
+    -name: "openstack_admin_password"
+     prompt: "Enter password for OpenStack admin user"
+     private: yes
+  tasks:
+    - include: chef-server/tasks/packages.yml
+    - include: chef-server/tasks/clone_cookbooks.yml
+    - include: chef-server/tasks/setup_knife.yml
+
+- hosts: nodes
+  tasks:
+    - include: common/tasks/bootstrap_puppet.yml
+    - include: common/tasks/bootstrap_chef.yml
+
+- hosts: controller
+  tasks:
+    - include: controller/tasks/run_chef.yml

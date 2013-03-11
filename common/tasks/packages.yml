@@ -1,0 +1,8 @@
+- name: Install general packages
+  action: yum pkg=$item state=installed
+  with_items:
+   - sysstat
+   - iptables
+   - curl
+  tags:
+   - packages

@@ -1,0 +1,2 @@
+- name: Add ssh authorized_key file for $user 
+  action:  authorized_key user=$user key="$FILE(~$user/.ssh/id_rsa.pub)"

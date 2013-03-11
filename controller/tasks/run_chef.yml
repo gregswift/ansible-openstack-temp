@@ -1,0 +1,2 @@
+- name: Run knife bootstrap
+  action: command knife bootstrap localhost -s "http://${chef_ip}:4000" -r 'role[single-controller]','recipe[gravity-bu::default]' -E rpcs bootstrap-version 11.2.0

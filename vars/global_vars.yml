@@ -1,0 +1,18 @@
+chef_ip: 169.254.123.2
+openstack_release: folsom
+environment: rpcs
+dashboard_theme: Rackspace
+default_store: swift
+ram_ratio: 1.0
+cpu_ratio: 2.0
+autostart: false
+resume_state: false
+custom_banner: Integrating the Cloud
+tenants:
+  - integration
+  - analytics
+  - repose
+  - atomhopper
+glance_images:
+  - cirros
+  - precise

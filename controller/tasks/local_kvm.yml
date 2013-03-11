@@ -1,0 +1,14 @@
+- name: Start the hypervisor
+  action: service name=libvirtd state=started enabled=yes
+
+- name: Disable default (virbr0) network
+  action: command virsh net-autostart default --disable
+
+- name: Destroy default (virbr0) network
+  action: command virsh net-destroy default
+
+- name: Undefine default(virbr0) network
+  action: command virsh net-undefine default
+
+- name: Enable IP forwarding on controllers
+  action: sysctl name=net.ipv4.ip_forward value=1 state=present
