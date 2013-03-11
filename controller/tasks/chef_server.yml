@@ -38,4 +38,4 @@
   action: file path=/root/.chef owner=root group=root mode=0755 state=directory
 
 - name: Place knife configuration for root
-  action: copy src=files/knife.rb dest=/root/.chef/knife.rb owner=root group=root mode=0644
+  action: template src=templates/knife.rb.j2 dest=/root/.chef/knife.rb owner=root group=root mode=0644
