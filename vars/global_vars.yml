@@ -1,6 +1,9 @@
+environment: dev99
+puppetmaster: puppet-n01.staging.us.ccp.rackspace.net
+repo_server: puppet-n01.staging.us.ccp.rackspace.net
 chef_ip: 169.254.123.2
 openstack_release: folsom
-environment: rpcs
+openstack_environment: rpcs
 dashboard_theme: Rackspace
 default_store: swift
 ram_ratio: 1.0

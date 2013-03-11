@@ -5,6 +5,7 @@
   tasks:
     - include: common/tasks/ssh_keys.yml user=root
     - include: common/tasks/update.yml
+    - include: common/tasks/add_ops_repo.yml
     - include: common/tasks/packages.yml
     - include: common/tasks/crashdump.yml
 
