@@ -1,7 +1,7 @@
 - name: Install packages related to virtualization
   action: yum pkg=$item state=installed
   with_items:
-   - python-libvirt
+   - libvirt-python
    - qemu-kvm
    - python-virtinst
    - libvirt
