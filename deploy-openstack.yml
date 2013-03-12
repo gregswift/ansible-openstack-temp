@@ -8,8 +8,8 @@
     - include: common/tasks/add_ops_repo.yml
     - include: common/tasks/packages.yml
     - include: common/tasks/crashdump.yml
-    - include: common/tasks/enable_hyperthreading.yml
-    - include: common/tasks/wait_for_boot.yml
+    #- include: common/tasks/reboot.yml
+    #- include: common/tasks/wait_for_boot.yml
 
 - hosts: controller
   user: root
