@@ -78,27 +78,31 @@
       },
       "network": {
         "fixed_range": "<fixed network>",
-        "public_interface": "<name of bridge where "public" traffic will head out>",
+        "public_interface": "{{ networks['public']['bridge'] }}",
         "multi_host": true,
-        "dmz_cidr": "10.128.0.0/24 < change if the customer has one listed in build ticket>"
+        "dmz_cidr": "{% if dmz_cidr %}{{ dmz_cidr }}{% else %}10.128.0.0/24{% end if %}"
       },
       "networks": [
+{% for network in networks %}
         {
-          "num_networks": "1",
-          "bridge": "br0",
-          "label": "public",
-          "bridge_dev": "publicbr0",
-          "dns1": "<DC nameserver1>",
-          "dns2": "<DC nameserver2>",
-          "network_size": "256",
-          "ipv4_cidr": "<change to match customers fixed network>"
-        }
+          "num_networks": "{% if network['num_networks'] %}{{ network['num_networks'] }}{% else %}1{% end if %}",
+          "bridge": "{{ network['bridge'] }}",
+          "label": "{{ network['label'] }}",
+          "bridge_dev": "{{ network['bridge_dev'] }}",
+          "dns1": "{{ network['dns_server1'] }}",
+          "dns2": "{{ network['dns_server2'] }}",
+          "network_size": "{{ network['network_size'] }}",
+          "ipv4_cidr": "{{ network['ipv4_cidr'] }}"
+        },
+{% end for %}
       ]
     },
     "osops_networks": {
-      "management": "<host network>",
-      "nova": "<fill in, most likely host network>",
-      "public": "<fill in, most likely host network>"
+      "management": "{{ mgmt_ipv4_cidr }}",
+      "nova": "{{ mgmt_ipv4_cidr }}",
+{% for network in networks %}
+      "{{ network['label'] }}": "{{ network['ipv4_cidr'] }}",
+{% end for %}
     }
   }
 }
