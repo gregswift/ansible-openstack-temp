@@ -8,6 +8,8 @@
     - include: common/tasks/add_ops_repo.yml
     - include: common/tasks/packages.yml
     - include: common/tasks/crashdump.yml
+    - include: common/tasks/enable_hyperthreading.yml
+    - include: common/tasks/wait_for_boot.yml
 
 - hosts: controller
   tasks:
@@ -22,7 +24,7 @@
      private: yes
   tasks:
     - include: chef-server/tasks/packages.yml
-    - include: chef-server/tasks/clone_cookbooks.yml
+    - include: chef-server/tasks/download_cookbooks.yml
     - include: chef-server/tasks/setup_knife.yml
 
 - hosts: openstack-nodes
@@ -31,5 +33,15 @@
     - include: common/tasks/bootstrap_chef.yml
 
 - hosts: controller
+  vars:
+    - host: $chef_ip
+    - roles: "'role[single-controller]','recipe[gravity-bu::default]'"
   tasks:
-    - include: controller/tasks/run_chef.yml
+    - include: common/tasks/run_chef.yml
+
+- hosts: compute
+  vars:
+    - host: $hostvars.{${groups.controller}[0]}.ansible_eth0
+    - roles: "'role[single-compute]'"
+  tasks:
+    - include: common/tasks/run_chef.yml

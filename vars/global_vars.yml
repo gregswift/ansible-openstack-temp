@@ -2,6 +2,10 @@ environment: dev99
 puppetmaster: puppet-n01.staging.us.ccp.rackspace.net
 repo_server: puppet-n01.staging.us.ccp.rackspace.net
 chef_ip: 169.254.123.2
+chef_path: /opt/rpcs
+chef_cookbook_src: http
+chef_cookbook_url: http://8a8313241d245d72fc52-b3448c2b169a7d986fbb3d4c6b88e559.r9.cf1.rackcdn.com/chef-cookbooks-v3.0.0.tgz
+chef_cookbook_path: /opt/rpcs/chef-cookbooks-v3.0.0
 openstack_release: folsom
 openstack_environment: rpcs
 dashboard_theme: Rackspace
