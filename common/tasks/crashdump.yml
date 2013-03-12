@@ -8,10 +8,10 @@
    - packages
 
 - name: Tune kdump.conf to enable dump file compression
-  action: command core_collector makedumpfile -d 17 -c
+  action: lineinfile dest=/etc/kdump.conf regexp=^core_collector line="core_collector makedumpfile -d 17 -c"
 
 - name: Configure grub with memory to de servered for crash kernel
-  action: command grubby --update-kernel=ALL --args"crashkernel=128M@16M"
+  action: command grubby --update-kernel=ALL --args="crashkernel=128M@16M"
 
 - name: Enable kdump service
   action: service name=kdump state=started enabled=yes
