@@ -1,0 +1,17 @@
+- name: Create directory for cookbooks
+  action: file path=/opt/rpcs/chef-cookbooks owner=root group-root mode=0755 state=directory
+  when_string: $chef_cookbook_src == 'git'
+
+- name: Clone main cookbooks
+  action: git repo=git://github.com/rcbops/chef-cookbooks.git dest=/opt/rpcs/chef-cookbooks
+  when_string: $chef_cookbook_src == 'git'
+
+- name: Download cookbooks
+  action: get_url url=$chef_cookbook_url dest=/tmp/cookbooks
+  when_string: $chef_cookbook_src == 'http'
+
+- name: Extract cookbooks
+  action: command tar -xf /tmp/cookbooks -C ${chef_path}
+
+- name: Clone gravity-bu cookbooks
+  action: git repo=git://github.com/rsoprivatecloud/gravity-bu.git dest=${chef_cookbook_path}/cookbooks/gravity-bu
