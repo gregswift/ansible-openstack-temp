@@ -1,0 +1,14 @@
+- name: Ensure dell tools are installed
+  action: yum name=$item state=installed
+  with_items:
+    - dell-omsa-repository
+    - srvadmin-omacore
+    - srvadmin-omcommon
+
+- name: Check for hyperthreading on dell boxes
+  action: shell /opt/dell/srvadmin/bin/omreport chassis processors index=0 | awk '/HyperThreading/ { getline; getline; print $(NF)}'
+  register: hyperthreading
+
+- name: Enable hyperthreading on dell boxes
+  action: command omconfig chassis biossetup attribute=cpuht setting=enabled
+  when_string: $hyperthreading != 'Yes'

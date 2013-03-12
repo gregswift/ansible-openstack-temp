@@ -1,5 +1,6 @@
 - name: Ensure puppet to our working version
   action: yum pkg=puppet state=installed
+
 - name: Ensure facter is at our working version
   action: yum pkg=facter state=installed
 

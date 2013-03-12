@@ -1,2 +1,0 @@
-- name: Run knife bootstrap
-  action: command knife bootstrap localhost -s "http://${controller_ip}:4000" -r 'role[single-compute]' -E rpcs bootstrap-version 11.0.0

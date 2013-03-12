@@ -1,0 +1,2 @@
+- name: Run knife bootstrap
+  action: command knife bootstrap localhost -s "http://${host}:4000" -r ${role} -E ${openstack_environment} bootstrap-version ${bootstrap_version}
