@@ -1,4 +1,4 @@
-- hosts: nodes
+- hosts: openstack-nodes
   vars_files:
     - vars/global_vars.yml
 
@@ -25,7 +25,7 @@
     - include: chef-server/tasks/clone_cookbooks.yml
     - include: chef-server/tasks/setup_knife.yml
 
-- hosts: nodes
+- hosts: openstack-nodes
   tasks:
     - include: common/tasks/bootstrap_puppet.yml
     - include: common/tasks/bootstrap_chef.yml
