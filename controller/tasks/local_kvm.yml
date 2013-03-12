@@ -1,14 +1,22 @@
 - name: Start the hypervisor
   action: service name=libvirtd state=started enabled=yes
 
+- name: Check for default network
+  action: command virsh net-info default
+  ignore_errors: yes
+  register: netinfo
+
 - name: Disable default (virbr0) network
   action: command virsh net-autostart default --disable
+  when_integer: $netinfo.rc < 1
 
 - name: Destroy default (virbr0) network
   action: command virsh net-destroy default
+  when_integer: $netinfo.rc < 1
 
 - name: Undefine default(virbr0) network
   action: command virsh net-undefine default
+  when_integer: $netinfo.rc < 1
 
 - name: Enable IP forwarding on controllers
   action: sysctl name=net.ipv4.ip_forward value=1 state=present
