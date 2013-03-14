@@ -1,2 +1,2 @@
 - name: Place motd file
-  action: copy src=files/motd dest=/etc/motd owner=root group=root mode=0644
+  action: copy src=/etc/ansible/playbooks/openstack/common/files/motd dest=/etc/motd owner=root group=root mode=0644
