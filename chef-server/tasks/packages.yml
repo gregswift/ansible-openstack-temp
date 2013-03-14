@@ -1,5 +1,5 @@
 - name: Install packages necessary for chef server
-  action: yum install name=$item state=installed
+  action: apt pkg=$item state=installed
   with_items:
     - chef
     - git

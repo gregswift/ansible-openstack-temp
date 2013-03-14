@@ -1,3 +1,12 @@
+- name: Ensure chef config directory exists for root
+  action: file path=/root/.chef owner=root group=root mode=0755 state=directory
+
+- name: Download validation key from self
+  action: get_url url=http://localhost:4000/validation.pem dest=/etc/chef/validation.pem mode=0440
+
+- name: Place knife configuration for root
+  action: template src=/etc/ansible/playbooks/openstack/controller/templates/knife.rb.j2 dest=/root/.chef/knife.rb owner=root group=root mode=0644
+
 - name: Upload cookbook
   action: command knife cookbook upload -o /opt/rpcs/chef-cookbooks/cookbooks -a
 

@@ -1,9 +1,12 @@
+- name: Create base directory
+  action: file path=${chef_path} owner=root group=root mode=0755 state=directory
+
 - name: Create directory for cookbooks
-  action: file path=/opt/rpcs/chef-cookbooks owner=root group-root mode=0755 state=directory
+  action: file path=${chef_path}/chef-cookbooks owner=root group=root mode=0755 state=directory
   when_string: $chef_cookbook_src == 'git'
 
 - name: Clone main cookbooks
-  action: git repo=git://github.com/rcbops/chef-cookbooks.git dest=/opt/rpcs/chef-cookbooks
+  action: git repo=git://github.com/rcbops/chef-cookbooks.git dest=${chef_path}/chef-cookbooks
   when_string: $chef_cookbook_src == 'git'
 
 - name: Download cookbooks
