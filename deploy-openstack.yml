@@ -1,62 +1,6 @@
-- hosts: openstack-nodes
-  user: root
-  vars_files:
-  - "vars/global_vars.yml"
-  tasks:
-    - include: common/tasks/ssh_keys.yml user=root
-    - include: common/tasks/update.yml
-    - include: common/tasks/add_ops_repo.yml
-    - include: common/tasks/packages.yml
-    - include: common/tasks/crashdump.yml
-    #- include: common/tasks/reboot.yml
-    #- include: common/tasks/wait_for_boot.yml
-
-- hosts: controller
-  user: root
-  vars_files:
-  - "vars/global_vars.yml"
-  tasks:
-    - include: controller/tasks/packages.yml
-    - include: controller/tasks/local_kvm.yml
-    - include: controller/tasks/chef_server.yml
-
-- hosts: chefserver
-  user: root
-  vars_files:
-  - "vars/global_vars.yml"
-  vars_prompt:
-    - name: "openstack_admin_password"
-      prompt: "Enter password for OpenStack admin user"
-      private: yes
-  tasks:
-    - include: chef-server/tasks/packages.yml
-    - include: chef-server/tasks/download_cookbooks.yml
-    - include: chef-server/tasks/setup_knife.yml
-
-- hosts: openstack-nodes
-  user: root
-  vars_files:
-  - "vars/global_vars.yml"
-  tasks:
-    - include: common/tasks/bootstrap_puppet.yml
-    - include: common/tasks/bootstrap_chef.yml
-
-- hosts: controller
-  user: root
-  vars_files:
-  - "vars/global_vars.yml"
-  vars:
-    - host: $chef_ip
-    - roles: "'role[single-controller]','recipe[gravity-bu::default]'"
-  tasks:
-    - include: common/tasks/run_chef.yml
-
-- hosts: compute
-  user: root
-  vars_files:
-  - "vars/global_vars.yml"
-  vars:
-    - host: $hostvars.{${groups.controller}[0]}.ansible_eth0
-    - roles: "'role[single-compute]'"
-  tasks:
-    - include: common/tasks/run_chef.yml
+- include: init_nodes.yml
+- include: prep_chef_environment.yml
+- include: chefserver.yml
+- include: bootstrap_nodes.yml
+- include: setup_controller.yml
+- include: setup_compute.yml

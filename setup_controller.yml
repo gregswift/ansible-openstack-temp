@@ -1,0 +1,9 @@
+- hosts: controller
+  user: root
+  vars_files:
+  - "vars/global_vars.yml"
+  vars:
+    - host: $chef_ip
+    - roles: "'role[single-controller]','recipe[gravity-bu::default]'"
+  tasks:
+    - include: common/tasks/run_chef.yml

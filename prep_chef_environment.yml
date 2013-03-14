@@ -1,0 +1,10 @@
+- hosts: controller
+  user: root
+  vars_files:
+  - "vars/global_vars.yml"
+  tasks:
+    - include: controller/tasks/packages.yml
+    - include: controller/tasks/local_kvm.yml
+    - include: controller/tasks/chef_server.yml
+  handlers:
+    - include: controller/handlers/restart_iptables.yml
