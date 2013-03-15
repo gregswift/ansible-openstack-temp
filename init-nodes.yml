@@ -1,7 +1,7 @@
 - hosts: openstack-nodes
   user: root
   vars_files:
-  - "vars/global_vars.yml"
+  - "vars/config.yml"
   tasks:
     - include: common/tasks/ssh_keys.yml user=root
     - include: common/tasks/update.yml

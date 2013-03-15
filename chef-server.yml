@@ -1,7 +1,7 @@
 - hosts: chef-server
   user: root
   vars_files:
-  - "vars/global_vars.yml"
+  - "vars/config.yml"
   vars_prompt:
     - name: "openstack_admin_password"
       prompt: "Enter password for OpenStack admin user"
