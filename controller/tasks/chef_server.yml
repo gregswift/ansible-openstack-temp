@@ -22,10 +22,10 @@
   action: file path=${chef_path} owner=root group=root mode=0755 state=directory
 
 - name: Download pristine chef-server image
-  action: get_url url=${chef_vm_url} dest=${chef_path}/chefserver.qcow2.pristine
+  action: get_url url=${chef_vm_url} dest=${chef_path}/chef-server.qcow2.pristine
 
 - name: Create runnable copy of chef-server image
-  action: command cp ${chef_path}/chefserver.qcow2.pristine ${chef_path}/chefserver.qcow2
+  action: command cp ${chef_path}/chef-server.qcow2.pristine ${chef_path}/chef-server.qcow2
 
 - name: Create chef-server xml file
   action: copy src=/etc/ansible/playbooks/openstack/controller/files/chef-server.xml dest=${chef_path}/chef-server.xml owner=root group=root mode=0644
