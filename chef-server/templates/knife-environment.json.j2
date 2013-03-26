@@ -12,7 +12,12 @@
     "package_component": "{{ openstack_release }}"
   },
   "override_attributes": {
-    "custom_template_banner": "{{ custom_banner }}"
+    "custom_template_banner": "{{ custom_banner }}",
+    "openssh": {
+      "server": {
+        "Subsystem": "sftp    /usr/libexec/openssh/sftp-server"
+      }
+    },
     "hardware" : {
       "install_oem": false
     },
@@ -33,8 +38,9 @@
          "service",
 {% if tenants %}
 {% for tenant in tenants %}
-         "{{ tenant }}",
-{% enfdor %}
+         "{{ tenant }}"{% if not loop.last %},
+{% endif %}
+{% endfor %}
 {% else %}
          "local-tenant",
 {% endif %}
@@ -59,12 +65,13 @@
       "api": {
 {% if default_store %}
         "default_store": "{{ default_store }}"
-{% end if %}
+{% endif %}
       },
       "images": [
 {% for image in glance_images %}
-         "{{ image }}",
-{% enfdor %}
+         "{{ image }}"{% if not loop.last %},
+{% endif %}
+{% endfor %}
       ],
       "image_upload": false
     },
@@ -72,37 +79,41 @@
       "config": {
         "ram_allocation_ratio": {{ ram_ratio }},
         "cpu_allocation_ratio": {{ cpu_ratio }},
-        "start_guests_on_host_boot": {{ autostart }},
-        "resume_guests_state_on_host_boot": {{ resume_state }},
+        "start_guests_on_host_boot": {{ autostart|lower() }},
+        "resume_guests_state_on_host_boot": {{ resume_state|lower() }},
         "use_single_default_gateway": false
       },
       "network": {
-        "fixed_range": "<fixed network>",
-        "public_interface": "{{ networks['public']['bridge'] }}",
+{% if fixed_range %}
+        "fixed_range": "{{ fixed_network }}",
+{% endif %}
+        "public_interface": "{{ mgmt_dev }}",
         "multi_host": true,
-        "dmz_cidr": "{% if dmz_cidr %}{{ dmz_cidr }}{% else %}10.128.0.0/24{% end if %}"
+        "dmz_cidr": "{% if dmz_cidr %}{{ dmz_cidr }}{% else %}10.128.0.0/24{% endif %}"
       },
       "networks": [
-{% for network in networks %}
+{% for label, network in networks.items() %}
         {
-          "num_networks": "{% if network['num_networks'] %}{{ network['num_networks'] }}{% else %}1{% end if %}",
+          "num_networks": "{% if network['num_networks'] %}{{ network['num_networks'] }}{% else %}1{% endif %}",
           "bridge": "{{ network['bridge'] }}",
-          "label": "{{ network['label'] }}",
+          "label": "{{ label }}",
           "bridge_dev": "{{ network['bridge_dev'] }}",
           "dns1": "{{ network['dns_server1'] }}",
           "dns2": "{{ network['dns_server2'] }}",
           "network_size": "{{ network['network_size'] }}",
           "ipv4_cidr": "{{ network['ipv4_cidr'] }}"
-        },
-{% end for %}
+        }{% if not loop.last %},
+{% endif %}
+{% endfor %}
       ]
     },
     "osops_networks": {
       "management": "{{ mgmt_ipv4_cidr }}",
       "nova": "{{ mgmt_ipv4_cidr }}",
-{% for network in networks %}
-      "{{ network['label'] }}": "{{ network['ipv4_cidr'] }}",
-{% end for %}
+{% for label in networks %}
+      "{{ label }}": "{{ networks[label]['ipv4_cidr'] }}"{% if not loop.last %},
+{% endif %}
+{% endfor %}
     }
   }
 }
