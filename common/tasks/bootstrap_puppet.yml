@@ -1,8 +1,8 @@
-- name: Ensure puppet to our working version
-  action: yum pkg=puppet state=installed
-
-- name: Ensure facter is at our working version
-  action: yum pkg=facter state=installed
+- name: Ensure puppet related related packages are installed
+  action: yum pkg=$item state=installed
+  with_items:
+    - puppet
+    - facter
 
 - name: Register system with puppet
   action: command /usr/bin/puppet agent apply --server=$puppetmaster --environment=$environment --pluginsync --waitforcert 300
