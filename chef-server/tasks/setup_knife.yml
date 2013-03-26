@@ -17,4 +17,4 @@
   action: template src=../templates/environment.json.j2 dest=/opt/rpcs/${environment}.json owner=root group=root mode=0644
 
 - name: Create knife environment
-  action: command knife environment openstack from file "/opt/rpcs/${environment}.json"
+  action: command knife environment ${environment} from file "/opt/rpcs/${environment}.json"
