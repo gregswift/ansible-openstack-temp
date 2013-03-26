@@ -8,7 +8,7 @@ chef_cookbook_url: http://8a8313241d245d72fc52-b3448c2b169a7d986fbb3d4c6b88e559.
 chef_cookbook_path: /opt/rpcs/chef-cookbooks-v3.0.0
 chef_vm_url: http://c390813.r13.cf1.rackcdn.com/chef-server.qcow2
 openstack_release: folsom
-openstack_environment: rpcs
+openstack_environment: dev99
 dashboard_theme: Rackspace
 default_store: swift
 ram_ratio: 1.0
@@ -25,25 +25,26 @@ glance_images:
   - cirros
   - precise
 mgmt_ipv4_cidr: 10.127.36.0/24
+mgmt_dev: eth0
 networks:
-  - label: public
+  public:
     bridge: br0
-    bridge_dev: publicbr0
+    bridge_dev: eth1:0
     dns_server1: 72.3.128.240
     dns_server2: 72.3.128.241
     network_size: 254
-    ipv4_cidr: 192.168.64.0/24
-  - label: protected
+    ipv4_cidr: 192.168.90.0/24
+  protected:
     bridge: br1
-    bridge_dev: protectedr1
+    bridge_dev: eth1:1
     dns_server1: 72.3.128.240
     dns_server2: 72.3.128.241
     network_size: 254
-    ipv4_cidr: 192.168.128.0/24
-  - label: private
+    ipv4_cidr: 192.168.91.0/24
+  private:
     bridge: br2
-    bridge_dev: privatebr2
+    bridge_dev: eth1:2
     dns_server1: 72.3.128.240
     dns_server2: 72.3.128.241
     network_size: 254
-    ipv4_cidr: 192.168.192.0/24
+    ipv4_cidr: 192.168.92.0/24
