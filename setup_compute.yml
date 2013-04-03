@@ -1,0 +1,12 @@
+- hosts: compute
+  user: root
+  vars_files:
+  - "vars/config.yml"
+  vars:
+    - host: ${hostvars.${groups.controller[0]}.ansible_eth0.ipv4.address}
+    - hostname: ${hostvars.${groups.controller[0]}.ansible_hostname}
+    - clients: ${groups.compute}
+    - roles: "'role[single-compute]'"
+  tasks:
+    - include: common/tasks/controller_ssh_key.yml
+    - include: compute/tasks/run_chef.yml
