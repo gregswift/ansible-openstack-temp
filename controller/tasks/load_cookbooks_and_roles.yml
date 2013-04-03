@@ -1,0 +1,5 @@
+- name: Upload cookbooks
+  action: command knife cookbook upload -o ${chef_cookbook_path}/cookbooks/ -a
+
+- name: Load roles
+  action: shell knife role from file ${chef_cookbook_path}/roles/*.rb

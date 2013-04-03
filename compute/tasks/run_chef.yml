@@ -1,0 +1,3 @@
+- name: Run knife bootstrap
+  action: command knife bootstrap ${inventory_hostname} -i /root/.ssh/id_rsa -s "http://${host}:4000" -r ${role} -E ${openstack_environment} bootstrap-version ${chef_bootstrap_version}
+  delegate_to: $hostname

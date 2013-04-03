@@ -4,6 +4,11 @@
     - puppet
     - facter
 
+#- name: Clear old certs
+#  sudo: yes
+#  action: command /usr/sbin/puppetca clean ${inventory_hostname} removes=/var/lib/puppet/ssl/ca/signed/${inventory_hostname}.pem
+#  delegate_to: ${puppetmaster}
+
 - name: Register system with puppet
-  action: command /usr/bin/puppet agent apply --server=$puppetmaster --environment=$environment --pluginsync --waitforcert 300
-    creates=/var/lib/puppet/ssl/certs/${fqdn}.pem
+  action: command /usr/bin/puppet agent apply --server=${puppetmaster} --environment=${puppet_environment} --pluginsync --waitforcert 300
+    creates=/var/lib/puppet/ssl/certs/${inventory_hostname}.pem

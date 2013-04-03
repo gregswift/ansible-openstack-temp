@@ -1,0 +1,10 @@
+- hosts: openstack-nodes
+  user: root
+  vars:
+    device: eth1
+  vars_files:
+  - "vars/config.yml"
+  tasks:
+    - include: common/tasks/setup_lab_network.yml
+  handlers:
+    - include: common/handlers/restart_network.yml

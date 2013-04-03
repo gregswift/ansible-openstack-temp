@@ -1,0 +1,5 @@
+- name: Make validation key accessible
+  action: file src=/etc/chef/validation.pem dest=/usr/share/chef-server-api/public/validation.pem state=link
+
+- name: Ensure correct permissions
+  action: file path=/etc/chef/validation.pem mode=0644 state=file

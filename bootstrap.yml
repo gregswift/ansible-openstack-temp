@@ -1,0 +1,10 @@
+- hosts: openstack-nodes
+  user: root
+  vars_files:
+  - "vars/config.yml"
+  tasks:
+    - include: common/tasks/crashdump.yml
+    - include: common/tasks/bootstrap_puppet.yml
+    - include: common/tasks/enable_hyperthreading.yml
+    - include: common/tasks/reboot.yml
+    - include: common/tasks/wait_for_boot.yml

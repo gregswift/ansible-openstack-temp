@@ -1,0 +1,12 @@
+- hosts: chef-server
+  sudo: yes
+  vars_files:
+    - "vars/config.yml"
+  tasks:
+    - include: chef-server/tasks/validation_key.yml
+
+- hosts: chef-server
+  vars_files:
+    - "vars/config.yml"
+  tasks:
+    - include: chef-server/tasks/setup_knife.yml

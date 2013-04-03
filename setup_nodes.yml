@@ -1,0 +1,30 @@
+- hosts: controller
+  user: root
+  vars_files:
+  - "vars/config.yml"
+  vars:
+    - host: $chef_ip
+    - hostname: $chef_ip
+    - clients: localhost
+    - roles: "'role[single-controller]','recipe[gravity-bu::default]'"
+  tasks:
+    - include: controller/tasks/create_root_ssh_key.yml
+    - include: common/tasks/controller_ssh_key.yml
+    - include: controller/tasks/setup_knife.yml
+    - include: controller/tasks/download_cookbooks.yml
+    - include: controller/tasks/load_cookbooks_and_roles.yml
+    - include: common/tasks/chef_packages.yml
+    - include: controller/tasks/run_chef.yml
+
+- hosts: compute
+  user: root
+  vars_files:
+  - "vars/config.yml"
+  vars:
+    - host: ${hostvars.${groups.controller[0]}.ansible_eth0.ipv4.address}
+    - hostname: ${hostvars.${groups.controller[0]}.ansible_hostname}
+    - clients: ${groups.compute}
+    - roles: "'role[single-compute]'"
+  tasks:
+    - include: common/tasks/controller_ssh_key.yml
+    - include: compute/tasks/run_chef.yml

@@ -8,7 +8,7 @@
   action: command iptables -t nat -A PREROUTING -s ${ansible_eth0.ipv4.address} -p tcp --dport 4000 -j DNAT --to-dest ${chef_ip}
 
 - name: Add prerouting rule to iptables for ssh to chef server
-  action: command iptables -t nat -A PREROUTING -s ${ansible_eth0.ipv4.address} -p tcp --dport 4022 -j DNAT --to-dest ${chef_ip}
+  action: command iptables -t nat -A PREROUTING -p tcp --dport 4022 -j DNAT --to-dest ${chef_ip}:22
 
 - name: Add postrouting rule to iptables for chef
   action: command iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
@@ -38,9 +38,3 @@
 
 - name: Start chef-server virtual
   action: virt guest=chef-server state=running
-
-- name: Ensure chef config directory exists for root
-  action: file path=/root/.chef owner=root group=root mode=0755 state=directory
-
-- name: Place knife configuration for root
-  action: template src=/etc/ansible/playbooks/openstack/controller/templates/knife.rb.j2 dest=/root/.chef/knife.rb owner=root group=root mode=0644

@@ -1,6 +1,6 @@
 - include: init_nodes.yml
+- include: setup_networking.yml
+- include: bootstrap.yml
 - include: prep_chef_environment.yml
-- include: chefserver.yml
-- include: bootstrap_nodes.yml
-- include: setup_controller.yml
-- include: setup_compute.yml
+- include: chef.yml
+- include: setup_nodes.yml

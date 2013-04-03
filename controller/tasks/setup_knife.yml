@@ -1,0 +1,11 @@
+- name: Ensure chef config directory exists for root
+  action: file path=/root/.chef owner=root group=root mode=0755 state=directory
+
+- name: Download validation key from server
+  action: get_url url=http://${chef_ip}:4000/validation.pem dest=/root/.chef/validation.pem mode=0440
+
+- name: Download controller key from server
+  action: get_url url=http://${chef_ip}:4000/controller.pem dest=/root/.chef/controller.pem mode=0440
+
+- name: Place server knife config file
+  action: template src=/etc/ansible/playbooks/openstack/controller/templates/knife.rb.j2 dest=/root/.chef/knife.rb owner=root group=root mode=0440

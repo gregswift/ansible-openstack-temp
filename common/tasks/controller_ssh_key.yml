@@ -1,0 +1,2 @@
+- name: Add ssh authorized_key file for controller node
+  action:  authorized_key user=root key="$FILE(/tmp/controller.pub/wenova-n01.dev99.sat6.us.ci.rackspace.net/root/.ssh/id_rsa.pub)"

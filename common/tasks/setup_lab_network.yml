@@ -1,0 +1,49 @@
+- name: get mac address of interface
+  action: shell /sbin/ip addr show ${device} | /bin/awk '/link\/ether/ { print \$2}'
+  register: hwaddr
+
+- name: Layout base interface
+  action:
+    module: template
+    src: /etc/ansible/playbooks/openstack/common/templates/virtual-primary.j2
+    dest: /etc/sysconfig/network-scripts/ifcfg-${device}
+    owner: root
+    group: root
+    mode: 0644
+
+#- name: Remove bad interfaces
+#  action: file path=/etc/sysconfig/network-scripts/ifcfg-${device}:${item} state=absent
+#  with_items:
+#    - public
+#    - private
+#    - protected
+
+- name: Layout vlan interfaces
+  action:
+    module: template
+    src: /etc/ansible/playbooks/openstack/common/templates/virtual-alias.j2
+    dest: /etc/sysconfig/network-scripts/ifcfg-${networks.{$item}.bridge_dev}
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - public
+    - private
+    - protected
+  notify:
+   - restart network
+
+- name: Layout bridge interfaces
+  action:
+    module: template
+    src: /etc/ansible/playbooks/openstack/common/templates/virtual-bridge.j2
+    dest: /etc/sysconfig/network-scripts/ifcfg-${networks.{$item}.bridge}
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - public
+    - private
+    - protected
+  notify:
+   - restart network
